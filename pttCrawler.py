@@ -3,6 +3,7 @@ import urllib
 import urllib2
 import time
 import json
+import datetime
 from bs4 import BeautifulSoup
 
 class pttCrawler():
@@ -22,14 +23,33 @@ class pttCrawler():
         return opener
     
     def Active(self):
+        curDate = self.getCurDate()
+        endDate = self.getEndDate(7)
         soup = self.getSoup(self.startUrl)
-        ACTIVE = True
         
-        while ACTIVE:
+        while True:
             self.getPost(soup)
             plink = self.getPrevPage(soup)
             soup = self.getSoup(plink)
-        
+            
+            if self.allPosts[-1]['date'] != curDate:
+                fn = curDate[:2] + curDate[3:]
+                self.mkjson(fn)
+                self.allPosts = []
+                curStrDate = datetime.datetime.strptime(curDate, "%m/%d")
+                curStrDate = curStrDate - datetime.timedelta(days=1)
+                curDate = str(curStrDate.month) + '/' + str(curStrDate.day)
+            
+            if curDate == endDate:
+                break
+
+    def getEndDate(self, endDays):
+        Date = datetime.datetime.strptime(self.getCurDate(), "%m/%d")
+        EndDate = Date - datetime.timedelta(days=endDays)
+        return str(EndDate.month) + '/' + str(EndDate.day)
+    
+    def getCurDate(self):
+        return str(time.localtime().tm_mon) + '/' + str(time.localtime().tm_mday)
         
     def getPrevPage(self, soup):
         btnGroup = soup.body.find_all('a', class_='btn wide')
@@ -78,8 +98,18 @@ class pttCrawler():
         for data in tmp_posts_buffer[::-1]:
             print data['date'] + '-' + data['title'] + '-' + data['author']
     
-    def mkjson(self):
-        f = open('posts.json', 'w+')
-        json.dump(self.allPosts, f)
-        f.close()
+    def classify(self):
+        curDate = self.allPosts[0]['date']
+        curStrDate = datetime.datetime.strptime(curDate, "%m/%d")
+        tmplst = []
+        for post in self.allPosts:
+            if post['date'] is curDate:
+                tmplst.append(post)
+            else:
+                yield tmplst
     
+    def mkjson(self, fn):
+        f = open(fn+'.json', 'w')
+        json.dump(self.allPosts, f)
+        f.close()                
+
