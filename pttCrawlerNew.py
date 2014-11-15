@@ -32,11 +32,8 @@ class pttCrawler():
             self.posts.update(self.getPost(soup))
             plink = self.getPrev(soup)
             soup = self.getSoup(plink)
+            curDate = self.Timer(curDate)
 
-            # Timer
-            curStrDate = datetime.datetime.strptime(curDate, "%m/%d")
-            curStrDate = curStrDate - datetime.timedelta(days=1)
-            curDate = str(curStrDate.month) + '/' + str(curStrDate.day)
             if curDate == endDate:
                 break
 
@@ -132,3 +129,13 @@ class pttCrawler():
     def makeDir(self):
         if not os.path.isdir(SAVE_PATH):
             os.makedirs(SAVE_PATH)
+
+    def timer(self, curDate):
+        # Timer
+        curStrDate = datetime.datetime.strptime(curDate, "%m/%d")
+        curStrDate = curStrDate - datetime.timedelta(days=1)
+        if curStrDate.day in [day for day in range(1, 10)]:
+            curDate = str(curStrDate.month) + '/' + '0' +str(curStrDate.day)
+        else:
+            curDate = str(curStrDate.month) + '/' + str(curStrDate.day)
+        return curDate
