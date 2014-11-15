@@ -128,12 +128,3 @@ class pttCrawler():
     def makeDir(self):
         if not os.path.isdir(SAVE_PATH):
             os.makedirs(SAVE_PATH)
-
-    def timer(self, curDate):
-        # Timer
-        curStrDate = datetime.datetime.strptime(curDate, "%m/%d")
-        curStrDate = curStrDate - datetime.timedelta(days=1)
-        if curStrDate.day in [day for day in range(1, 10)]:
-            return str(curStrDate.month) + '/' + '0' +str(curStrDate.day)
-        else:
-            return str(curStrDate.month) + '/' + str(curStrDate.day)
