@@ -24,17 +24,16 @@ class pttCrawler():
     def update(self):
         # Update init
         soup = self.getSoup(START_URL)
-        curDate = self.getCurDate()
         endDate = self.getEndDate(DAY_CYCLE)
+        n = 10
 
         # update loop
         while True:
             self.posts.update(self.getPost(soup))
             plink = self.getPrev(soup)
             soup = self.getSoup(plink)
-            curDate = self.Timer(curDate)
 
-            if curDate == endDate:
+            if endDate in self.posts.keys():
                 break
 
     def Opener(self):
@@ -135,7 +134,6 @@ class pttCrawler():
         curStrDate = datetime.datetime.strptime(curDate, "%m/%d")
         curStrDate = curStrDate - datetime.timedelta(days=1)
         if curStrDate.day in [day for day in range(1, 10)]:
-            curDate = str(curStrDate.month) + '/' + '0' +str(curStrDate.day)
+            return str(curStrDate.month) + '/' + '0' +str(curStrDate.day)
         else:
-            curDate = str(curStrDate.month) + '/' + str(curStrDate.day)
-        return curDate
+            return str(curStrDate.month) + '/' + str(curStrDate.day)
