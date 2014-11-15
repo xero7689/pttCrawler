@@ -12,9 +12,13 @@ from settings import *
 class pttCrawler():
 
     def __init__(self):
-        self.posts = {}
+        #self.posts = {}
+        self.posts = OrderedDict([])
         self.Opener()
         self.makeDir()
+
+    def readback(self):
+        pass
 
     def travel(self, url):
         # Travel website one time.
@@ -62,9 +66,8 @@ class pttCrawler():
         # Get Posts from a soup object, and return a dictionary of these posts.
 
         tmpPosts = soup.body.find_all('div', class_='r-ent')
-        tmpPostsBuf = {}
-        #tmpPostsBuf = OrderedDict([])
-        #tmpPostsLst = []
+        #tmpPostsBuf = {}
+        tmpPostsBuf = OrderedDict([])
 
         for tmpPost in tmpPosts:
             try:
@@ -83,15 +86,16 @@ class pttCrawler():
                     tmpPostsBuf.setdefault(date, {})
                 tmpPostsBuf[date][href] = (title, author, nrec)
 
-                # Print Download Data
-                for key1, value1 in tmpPostsBuf.iteritems():
-                    for key2, value2 in value1.iteritems():
-                        print '[' + key1 + ']' + value2[0] + '-' + value2[1]
-
             except TypeError as e:
-                print "TypeError: ".format(e.message)
+                print "TypeError! Continue..."
                 continue
 
+        items = tmpPostsBuf.items()
+        items.reverse()
+        tmpPostsBuf = OrderedDict(items)
+        for key, value1 in tmpPostsBuf.iteritems():
+            for key2, value2 in value1.iteritems():
+                print '[' + key1 + ']' + value2[0] + '-' + value[1]
         return tmpPostsBuf
 
     def mkJson(self):

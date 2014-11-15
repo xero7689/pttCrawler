@@ -17,4 +17,4 @@ SAVE_PATH = os.path.join(WORKING_PATH, SAVE_DIR)
 
 # Crawler Setting
 DELAY = 1
-DAY_CYCLE = 7
+DAY_CYCLE = 1
