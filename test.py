@@ -1,4 +1,4 @@
-from pttCrawler import *
+from pttCrawlerNew import *
 
 pt = pttCrawler()
 pt.update()
