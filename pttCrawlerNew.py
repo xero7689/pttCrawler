@@ -35,7 +35,7 @@ class pttCrawler():
             posts = self.getPost(soup)
             for date, data in posts.iteritems():
                 if date not in self.posts.keys():
-                    self.posts.setdefault(date, {})
+                    self.posts.setdefault(date, OrderedDict([]))
                 self.posts[date].update(data)
 
             plink = self.getPrev(soup)
@@ -69,7 +69,7 @@ class pttCrawler():
         #tmpPostsBuf = {}
         tmpPostsBuf = OrderedDict([])
 
-        for tmpPost in tmpPosts:
+        for tmpPost in tmpPosts.reverse():
             try:
                 # A Single Post
                 date = tmpPost.find('div', class_='date').string
@@ -90,12 +90,11 @@ class pttCrawler():
                 print "TypeError! Continue..."
                 continue
 
-        items = tmpPostsBuf.items()
-        items.reverse()
-        tmpPostsBuf = OrderedDict(items)
+        # Print the data already been crawled
         for key1, value1 in tmpPostsBuf.iteritems():
             for key2, value2 in value1.iteritems():
                 print '[' + key1 + ']' + value2[0] + '-' + value2[1]
+
         return tmpPostsBuf
 
     def mkJson(self):
