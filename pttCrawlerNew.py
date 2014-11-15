@@ -25,11 +25,15 @@ class pttCrawler():
         # Update init
         soup = self.getSoup(START_URL)
         endDate = self.getEndDate(DAY_CYCLE)
-        n = 10
 
         # update loop
         while True:
-            self.posts.update(self.getPost(soup))
+            posts = self.getPost(soup)
+            for date, data in posts.iteritems():
+                if date not in self.posts.keys():
+                    self.posts.setdefault(date, {})
+                self.posts[date].update(data)
+
             plink = self.getPrev(soup)
             soup = self.getSoup(plink)
 
