@@ -66,10 +66,11 @@ class pttCrawler():
         # Get Posts from a soup object, and return a dictionary of these posts.
 
         tmpPosts = soup.body.find_all('div', class_='r-ent')
+        tmpPosts.reverse()
         #tmpPostsBuf = {}
         tmpPostsBuf = OrderedDict([])
 
-        for tmpPost in tmpPosts.reverse():
+        for tmpPost in tmpPosts:
             try:
                 # A Single Post
                 date = tmpPost.find('div', class_='date').string
