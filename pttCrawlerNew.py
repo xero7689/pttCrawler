@@ -83,7 +83,7 @@ class pttCrawler():
 
                 # Save posts to buffer
                 if date not in tmpPostsBuf.keys():
-                    tmpPostsBuf.setdefault(date, {})
+                    tmpPostsBuf.setdefault(date, OrderedDict([]))
                 tmpPostsBuf[date][href] = (title, author, nrec)
 
             except TypeError as e:
@@ -93,9 +93,9 @@ class pttCrawler():
         items = tmpPostsBuf.items()
         items.reverse()
         tmpPostsBuf = OrderedDict(items)
-        for key, value1 in tmpPostsBuf.iteritems():
+        for key1, value1 in tmpPostsBuf.iteritems():
             for key2, value2 in value1.iteritems():
-                print '[' + key1 + ']' + value2[0] + '-' + value[1]
+                print '[' + key1 + ']' + value2[0] + '-' + value2[1]
         return tmpPostsBuf
 
     def mkJson(self):
