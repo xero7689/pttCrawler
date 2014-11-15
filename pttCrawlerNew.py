@@ -25,10 +25,10 @@ class pttCrawler():
         # Update init
         soup = self.getSoup(START_URL)
         curDate = self.getCurDate()
-        endDate = self.getEndDate(3)
+        endDate = self.getEndDate(DAY_CYCLE)
 
         # update loop
-        while curDate is not endDate:
+        while True:
             self.posts.update(self.getPost(soup))
             plink = self.getPrev(soup)
             soup = self.getSoup(plink)
@@ -37,6 +37,8 @@ class pttCrawler():
             curStrDate = datetime.datetime.strptime(curDate, "%m/%d")
             curStrDate = curStrDate - datetime.timedelta(days=1)
             curDate = str(curStrDate.month) + '/' + str(curStrDate.day)
+            if curDate == endDate:
+                break
 
     def Opener(self):
         cookies = urllib2.HTTPCookieProcessor()
@@ -92,7 +94,7 @@ class pttCrawler():
 
         return tmpPostsBuf
 
-    def mkjson(self):
+    def mkJson(self):
         for date, data2 in self.posts.iteritems():
             json_list = []
             for href, data1 in data2.iteritems():
