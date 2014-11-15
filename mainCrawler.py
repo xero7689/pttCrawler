@@ -1,4 +1,4 @@
-from pttCrawlerNew import *
+from pttCrawler import *
 
 pt = pttCrawler()
 pt.travel()
